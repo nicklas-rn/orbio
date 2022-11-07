@@ -1,0 +1,100 @@
+#main{
+    display: flex;
+    flex-direction: column;
+}
+
+
+.navigator{
+    position: absolute;
+    left: 25px;
+    top: 25px;
+    font-size: 25;
+    font-weight: 200;
+}
+
+.navigator-link, .navigator-text{
+    display: inline-block;
+}
+
+.navigator-link{
+    cursor: pointer;
+}
+
+
+.elements{
+    display: flex;
+    margin-bottom: 50px;
+}
+
+.element{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0px 30px;
+}
+
+.element-horizontal-container{
+    justify-content: space-between;
+}
+
+.element-title{
+    font-size: 30;
+    margin-bottom: 10px;
+}
+
+.element-position{
+
+}
+
+.element-inputs{
+    display: flex;
+}
+
+.element-inputs-vertical{
+    flex-direction: column;
+}
+
+.element-inputs-horizontal{
+    flex-direction: row;
+    padding: 20px 0px;
+    align-items: center;
+}
+
+.element-button{
+    height: 100px;
+    width: 100px;
+}
+
+.element-button-vertical{
+    margin: 20px 0px;
+}
+
+.element-button-horizontal{
+    margin: 0px 20px;
+}
+
+.element-steps{
+    height: 100px;
+    width: 100px;
+    font-size: 30;
+    display: flex;
+}
+
+.arrow-down{
+    transform: rotate(180deg);
+}
+
+.arrow-right{
+    transform: rotate(90deg);
+}
+
+.arrow-left{
+    transform: rotate(-90deg);
+}
+
+
+.home-button{
+    font-size: 40;
+    font-weight: 300;
+    padding: 10px 40px;
+}
