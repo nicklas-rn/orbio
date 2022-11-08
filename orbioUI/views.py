@@ -9,7 +9,7 @@ ports = serial.tools.list_ports.comports()
 print([port.name for port in ports])
 
 try:
-    steppers = serial.Serial(port='/dev/cu.usbserial-1120', baudrate=115200, timeout=.1)
+    steppers = serial.Serial(port='ttyUSB0', baudrate=115200, timeout=.1)
 except:
     steppers = serial.Serial()
 
