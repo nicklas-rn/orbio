@@ -41,6 +41,7 @@ input{
     left: 150px;
 }
 
+
 #main{
     display: flex;
     align-items: center;
@@ -49,4 +50,51 @@ input{
     width: 100%;
     z-index: 1;
     position: relative;
+}
+
+
+.wrapper-center-row{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    position: relative;
+}
+
+
+.wrapper-center-column{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    position: relative;
+}
+
+
+.text-button{
+    display: block;
+    text-decoration: None;
+    font-size: 35;
+    margin-bottom: 20px;
+    width: 300px;
+    text-align: center;
+    font-weight: 300;
+    border-radius: 20px;
+    padding: 10px 20px;
+    border: 2px solid white;
+    background-color: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+}
+
+.text-button-small{
+    width: 100px;
+    margin-top: 10px;
+}
+
+.quadratic-input{
+    height: 100px;
+    width: 100px;
+    font-size: 30;
+    display: flex;
 }

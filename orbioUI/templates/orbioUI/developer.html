@@ -5,118 +5,15 @@
 
 {% load static %}
 
+<link rel="stylesheet" type="text/css" href="{% static 'orbioUI/home_style.css' %}">
 
-<script src="{% static 'orbioUI/spinner_picker.js' %}"></script>
-<!-- Important to prevent mobile reloading when overscroll -->
-<style>
-    body {
-        overscroll-behavior: contain;
-    }
-</style>
-<link rel="stylesheet" type="text/css" href="{% static 'orbioUI/developer_style.css' %}">
 
-<div class="navigator">
-    <p class="navigator-link">Developer Mode</p>
-    <p class="navigator-text">></p>
-    <p class="navigator-link">Move steppers</p>
+<div class="wrapper-center-column">
+
+    <a class="text-button" href="/developer_moveSteppers/">Move Steppers</a>
+    <a class="text-button" href="/developer_setHeaters/">Set Heaters</a>
+
 </div>
-
-<div class="elements">
-    <div class="element element-vertical">
-        <p class="element-title">Upper Layer</p>
-        <p class="element-position">current pos: <span class="element-position-value" id="element-position-upperLayer">0</span></p>
-        <div class="element-inputs element-inputs-vertical">
-            <button class="element-button element-button-vertical element-button-up" onclick="moveElement('upperLayer', '1')"><img class="arrow arrow-up" src="/media/orbioUI/icons/arrow-up.svg"></button>
-            <input class="element-steps" id="element-steps-upperLayer" type="number" placeholder="distance" min="1" value="1">
-            <button class="element-button element-button-vertical element-button-down" onclick="moveElement('upperLayer', '0')"><img class="arrow arrow-down" src="/media/orbioUI/icons/arrow-up.svg"></button>
-        </div>
-    </div>
-
-    <div class="element element-vertical">
-        <p class="element-title">Lower Layer</p>
-        <p class="element-position">current pos: <span class="element-position-value" id="element-position-lowerLayer">0</span></p>
-        <div class="element-inputs element-inputs-vertical">
-            <button class="element-button element-button-vertical element-button-up" onclick="moveElement('lowerLayer', '1')"><img class="arrow arrow-up" src="/media/orbioUI/icons/arrow-up.svg"></button>
-            <input class="element-steps" id="element-steps-lowerLayer" type="number" placeholder="distance" min="1" value="1">
-            <button class="element-button element-button-vertical element-button-down" onclick="moveElement('lowerLayer', '0')"><img class="arrow arrow-down" src="/media/orbioUI/icons/arrow-up.svg"></button>
-        </div>
-    </div>
-
-    <div class="element element-horizontal-container">
-        <div class="element element-horizontal">
-            <p class="element-title">Lifter</p>
-            <p class="element-position">current pos: <span class="element-position-value" id="element-position-lifter">0</span></p>
-            <div class="element-inputs element-inputs-horizontal">
-                <button class="element-button element-button-horizontal element-button-up" onclick="moveElement('lifter', '1')"><img class="arrow arrow-left" src="/media/orbioUI/icons/arrow-up.svg"></button>
-                <input class="element-steps" id="element-steps-lifter" type="number" placeholder="distance" min="1" value="1">
-                <button class="element-button element-button-horizontal element-button-down" onclick="moveElement('lifter', '0')"><img class="arrow arrow-right" src="/media/orbioUI/icons/arrow-up.svg"></button>
-            </div>
-        </div>
-        <div class="element element-horizontal element-horizontal-bottom">
-            <p class="element-title">Disk Motor</p>
-            <p class="element-position">current pos: <span class="element-position-value" id="element-position-diskMotor">0</span></p>
-            <div class="element-inputs element-inputs-horizontal">
-                <button class="element-button element-button-horizontal element-button-up" onclick="moveElement('diskMotor', '1')"><img class="arrow arrow-left" src="/media/orbioUI/icons/clockwise.svg"></button>
-                <input class="element-steps" id="element-steps-diskMotor" type="number" placeholder="distance" min="1" value="1">
-                <button class="element-button element-button-horizontal element-button-down" onclick="moveElement('diskMotor', '0')"><img class="arrow arrow-right" src="/media/orbioUI/icons/anti-clockwise.svg"></button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<button class="home-button" onclick="homeElements()">Home all steppers</button>
-
-<script>
-    function moveElement(element, dir){
-        let str = 'element-steps-' + element
-        let steps = document.getElementById(str).value
-        str = 'element-position-' + element
-        let currentPosElement = document.getElementById(str)
-        let currentPos = parseInt(currentPosElement.innerHTML)
-        let transformedDir = 0
-        if(dir == 1){
-            transformedDir = 1
-        }
-        else if(dir == 0){
-            transformedDir = -1
-        }
-        let new_pos = steps * transformedDir + currentPos
-
-        if(new_pos >= 0 && element != 'upperLayer' || new_pos <= 0 && element == 'upperLayer'){
-            document.getElementById(str).textContent = new_pos
-
-            $.ajax({
-                type: 'POST',
-                url: '/move_element/',
-                data: {
-                    'element': JSON.stringify(element),
-                    'dir': JSON.stringify(dir),
-                    'steps': JSON.stringify(steps),
-                    'csrfmiddlewaretoken': '{{csrf_token}}'
-                },
-                success: async function() {let delayres = await delay(50); console.log('data received');}
-            })
-       }
-    }
-
-
-    function homeElements(){
-        positions = document.getElementsByClassName('element-position-value')
-        for(let i=0; i<positions.length; i++){
-            positions[i].textContent = 0
-        }
-
-
-        $.ajax({
-            type: 'POST',
-            url: '/home_elements/',
-            data: {
-                'csrfmiddlewaretoken': '{{csrf_token}}'
-            },
-            success: async function() {let delayres = await delay(50); console.log('data received');}
-        })
-    }
-</script>
 
 {% endblock %}
 

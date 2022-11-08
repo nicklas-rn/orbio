@@ -6,6 +6,8 @@ from . import views
 urlpatterns = [
     path('', views.home, name='home'),
     path('developer/', views.developer, name='developer'),
+    path('developer_moveSteppers/', views.developer_moveSteppers, name='developer_moveSteppers'),
+    path('developer_setHeaters/', views.developer_setHeaters, name='developer_setHeaters'),
 
     path('move_element/', views.move_element, name='move_element'),
     path('home_elements/', views.home_elements, name='home_elements'),

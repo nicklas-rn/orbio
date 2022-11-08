@@ -14,6 +14,7 @@
 
 .navigator-link, .navigator-text{
     display: inline-block;
+    text-decoration: None;
 }
 
 .navigator-link{
@@ -42,7 +43,7 @@
     margin-bottom: 10px;
 }
 
-.element-position{
+.element-subtitle{
 
 }
 
@@ -73,12 +74,6 @@
     margin: 0px 20px;
 }
 
-.element-steps{
-    height: 100px;
-    width: 100px;
-    font-size: 30;
-    display: flex;
-}
 
 .arrow-down{
     transform: rotate(180deg);
@@ -97,4 +92,23 @@
     font-size: 40;
     font-weight: 300;
     padding: 10px 40px;
+}
+
+
+
+.heaters{
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+.heater{
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.heater-input{
+    margin-top: 20px;
 }
