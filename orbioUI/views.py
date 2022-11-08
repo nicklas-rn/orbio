@@ -1,7 +1,12 @@
 from django.shortcuts import render
 from .models import *
 import time, json, serial
+import serial.tools.list_ports
 from django.http import HttpResponse
+
+ports = serial.tools.list_ports.comports()
+
+print([port.name for port in ports])
 
 try:
     steppers = serial.Serial(port='/dev/cu.usbserial-1120', baudrate=115200, timeout=.1)
