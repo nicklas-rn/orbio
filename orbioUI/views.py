@@ -78,14 +78,31 @@ def home_elements(request):
 
 def read_temps(request):
 
-    temps = str(heaters.readline()).split(',')
+    try:
+        temps = str(heaters.readline()).split(',')
+    except:
+        print('Serial port not available')
+        temps = ['0', '0', '0', '0']
 
     response = json.dumps({
         'status': 'ok',
-        'temps': temps,
+        'temps': json.dumps(temps),
     })
 
     return HttpResponse(response)
 
 
+def set_temps(request):
 
+    temps = json.loads(request.POST['temps'])
+
+    try:
+        heaters.write(bytes(f"{temps[0]},{temps[1]},{temps[2]},,{temps[3]}", 'utf-8'))
+    except:
+        print('Serial port not available')
+
+    response = json.dumps({
+        'status': 'ok',
+    })
+
+    return HttpResponse(response)

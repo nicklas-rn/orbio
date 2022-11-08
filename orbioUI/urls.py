@@ -11,6 +11,9 @@ urlpatterns = [
 
     path('move_element/', views.move_element, name='move_element'),
     path('home_elements/', views.home_elements, name='home_elements'),
+
+    path('read_temps/', views.read_temps, name='read_temps'),
+    path('set_temps/', views.set_temps, name='set_temps'),
 ]
 
 

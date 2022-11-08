@@ -29,45 +29,47 @@
             <p class="element-title">Heater 1</p>
             <p class="heater-temperature">current temp: <span class="heater-temperature-value" id="heater-temperature-value-1">20</span></p>
             <input class="quadratic-input heater-input" id="heater-temperature-input-1" type="number" placeholder="temp" min="20" value="20">
-            <button class="heater-button text-button text-button-small" onclick="setTemp('1')">set</button>
+            <!--<button class="heater-button text-button text-button-small" onclick="setTemp('1')">set</button>-->
         </div>
         <div class="heater">
             <p class="element-title">Heater 2</p>
             <p class="heater-temperature">current temp: <span class="heater-temperature-value" id="heater-temperature-value-2">20</span></p>
             <input class="quadratic-input heater-input" id="heater-temperature-input-2" type="number" placeholder="temp" min="20" value="20">
-            <button class="heater-button text-button text-button-small" onclick="setTemp('2')">set</button>
+            <!--<button class="heater-button text-button text-button-small" onclick="setTemp('2')">set</button>-->
         </div>
         <div class="heater">
             <p class="element-title">Heater 4</p>
             <p class="heater-temperature">current temp: <span class="heater-temperature-value" id="heater-temperature-value-4">20</span></p>
             <input class="quadratic-input heater-input" id="heater-temperature-input-4" type="number" placeholder="temp" min="20" value="20">
-            <button class="heater-button text-button text-button-small" onclick="setTemp('4')">set</button>
+            <!--<button class="heater-button text-button text-button-small" onclick="setTemp('4')">set</button>-->
         </div>
         <div class="heater">
             <p class="element-title">Heater 3</p>
             <p class="heater-temperature">current temp: <span class="heater-temperature-value" id="heater-temperature-value-3">20</span></p>
             <input class="quadratic-input heater-input" id="heater-temperature-input-3" type="number" placeholder="temp" min="20" value="20">
-            <button class="heater-button text-button text-button-small" onclick="setTemp('3')">set</button>
+           <!-- <button class="heater-button text-button text-button-small" onclick="setTemp('3')">set</button>-->
         </div>
     </div>
 
 </div>
 
-<button class="home-button" onclick="homeElements()">Reset all temperatures</button>
+<button class="home-button" onclick="setTemps()">Set temperatures</button>
 
 <script>
     readTemps()
 
-    function setTemp(heater){
-        let str = 'heater-temperature-input-' + heater
-        let temp = document.getElementById(str).value
+    function setTemps(){
+        let temp_inputs = document.getElementsByClassName('heater-input')
+        let temps = []
+        for(let i=0; i<temp_inputs.length; i++){
+            temps[i] = temp_inputs[i].value
+        }
 
         $.ajax({
             type: 'POST',
-            url: '/set_temp/',
+            url: '/set_temps/',
             data: {
-                'heater': JSON.stringify(heater),
-                'temp': JSON.stringify(temp),
+                'temps': JSON.stringify(temps),
                 'csrfmiddlewaretoken': '{{csrf_token}}'
             },
             success: async function() {let delayres = await delay(50); console.log('data received');}
@@ -76,71 +78,47 @@
     }
 
     function readTemps(){
+
+        fetch('/read_temps/')
+        .then((response) => response.json())
+        .then(function(data){
+            let temps = JSON.parse(data['temps'])
+            let currentTemps = document.getElementsByClassName('heater-temperature-value')
+            for(let i=0; i<currentTemps.length; i++){
+                currentTemps[i].textContent = temps[i]
+            }
+        }
+
+        );
+
+        /*
         let request = new XMLHttpRequest()
         let method = 'GET'
 
         let url = '/read_temps/'
         request.open(method, url)
         request.onload = function () {
-            let response = JSON.stringify(request.response['temps']).split(',')
+            let response = []
+            try{
+                console.log(request.response['temps'])
+                let response = JSON.parse(request.response['temps']).split(',')
+            }
+            catch{
+                response = []
+            }
+            console.log(response)
             let currentTemps = document.getElementsByClassName('heater-temperature-value')
             for(let i=0; i<currentTemps.length; i++){
                 currentTemps[i].textContent = response[i]
             }
         }
         request.send()
+        */
 
-        setTimeout(readTemps(), 3000)
-    }
-
-    function moveElement(element, dir){
-        let str = 'element-steps-' + element
-        let steps = document.getElementById(str).value
-        str = 'element-position-' + element
-        let currentPosElement = document.getElementById(str)
-        let currentPos = parseInt(currentPosElement.innerHTML)
-        let transformedDir = 0
-        if(dir == 1){
-            transformedDir = 1
-        }
-        else if(dir == 0){
-            transformedDir = -1
-        }
-        let new_pos = steps * transformedDir + currentPos
-
-        if(new_pos >= 0 && element != 'upperLayer' || new_pos <= 0 && element == 'upperLayer'){
-
-            $.ajax({
-                type: 'POST',
-                url: '/move_element/',
-                data: {
-                    'element': JSON.stringify(element),
-                    'dir': JSON.stringify(dir),
-                    'steps': JSON.stringify(steps),
-                    'csrfmiddlewaretoken': '{{csrf_token}}'
-                },
-                success: async function() {document.getElementById(str).textContent = new_pos; let delayres = await delay(50); console.log('data received');}
-            })
-       }
+        setTimeout(readTemps, 2000);
     }
 
 
-    function homeElements(){
-        positions = document.getElementsByClassName('element-position-value')
-        for(let i=0; i<positions.length; i++){
-            positions[i].textContent = 0
-        }
-
-
-        $.ajax({
-            type: 'POST',
-            url: '/home_elements/',
-            data: {
-                'csrfmiddlewaretoken': '{{csrf_token}}'
-            },
-            success: async function() {let delayres = await delay(50); console.log('data received');}
-        })
-    }
 </script>
 
 {% endblock %}
