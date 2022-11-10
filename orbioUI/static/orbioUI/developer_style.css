@@ -4,24 +4,6 @@
 }
 
 
-.navigator{
-    position: absolute;
-    left: 25px;
-    top: 25px;
-    font-size: 25;
-    font-weight: 200;
-}
-
-.navigator-link, .navigator-text{
-    display: inline-block;
-    text-decoration: None;
-}
-
-.navigator-link{
-    cursor: pointer;
-}
-
-
 .elements{
     display: flex;
     margin-bottom: 50px;

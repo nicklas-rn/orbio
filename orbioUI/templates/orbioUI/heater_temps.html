@@ -1,0 +1,41 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'orbioUI/heater_temps_style.css' %}">
+
+<div id="heater-temps" onclick="window.location.href='/developer_setHeaters/'">
+  <p class="heater-temps-title">Heaters</p>
+  <div class="heater-temp">
+    <p class="heater-title">1: </p><p class="heater-temp-value">20</p>
+  </div>
+  <div class="heater-temp">
+    <p class="heater-title">2: </p><p class="heater-temp-value">20</p>
+  </div>
+  <div class="heater-temp">
+    <p class="heater-title">3: </p><p class="heater-temp-value">20</p>
+  </div>
+    <div class="heater-temp">
+    <p class="heater-title">4: </p><p class="heater-temp-value">20</p>
+  </div>
+</div>
+
+
+<script>
+  readTemps()
+
+  function readTemps(){
+
+    fetch('/read_temps/')
+    .then((response) => response.json())
+    .then(function(data){
+        let temps = JSON.parse(data['temps'])
+        let currentTemps = document.getElementsByClassName('heater-temp-value')
+        for(let i=0; i<currentTemps.length; i++){
+            currentTemps[i].textContent = temps[i]
+        }
+    }
+
+    );
+
+    setTimeout(readTemps, 2000);
+  }
+</script>

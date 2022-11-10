@@ -71,6 +71,8 @@
 
 <button class="home-button" onclick="homeElements()">Home all steppers</button>
 
+{% include 'orbioUI/heater_temps.html' %}
+
 <script>
     function moveElement(element, dir){
         let str = 'element-steps-' + element

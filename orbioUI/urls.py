@@ -14,6 +14,10 @@ urlpatterns = [
 
     path('read_temps/', views.read_temps, name='read_temps'),
     path('set_temps/', views.set_temps, name='set_temps'),
+
+
+    path('production/', views.production, name='production'),
+    path('pcr_run/', views.pcr_run, name='pcr_run'),
 ]
 
 

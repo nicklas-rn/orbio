@@ -1,23 +1,37 @@
 from django.shortcuts import render
 from .models import *
-import time, json, serial
+import time, json, serial, re
 import serial.tools.list_ports
 from django.http import HttpResponse
 
-ports = serial.tools.list_ports.comports()
 
-print([port.name for port in ports])
-
-try:
-    steppers = serial.Serial(port='ttyUSB0', baudrate=115200, timeout=.1)
-except:
-    steppers = serial.Serial()
+global steppers
+global heaters
 
 
-try:
-    heaters = serial.Serial(port='/dev/cu.usbserial-1130', baudrate=115200, timeout=.1)
-except:
-    heaters = serial.Serial()
+def initialize_ports():
+    ports = serial.tools.list_ports.comports()
+
+    print([port.name for port in ports])
+
+    global steppers
+    global heaters
+
+    try:
+        steppers = serial.Serial(port='/dev/cu.usbserial-120', baudrate=115200, timeout=.1)
+    except:
+        steppers = serial.Serial()
+
+
+    try:
+        heaters = serial.Serial(port='/dev/cu.usbserial-110', baudrate=19200, timeout=.1)
+    except:
+        heaters = serial.Serial()
+
+    time.sleep(1)
+
+
+initialize_ports()
 
 
 def home(request):
@@ -79,17 +93,23 @@ def home_elements(request):
 def read_temps(request):
 
     try:
-        temps = str(heaters.readline()).split(',')
-    except:
+        temps = re.sub('[^\d\.\,]', '', str(heaters.readline())).split(',')
+        print(temps)
+    except serial.serialutil.PortNotOpenError:
         print('Serial port not available')
         temps = ['0', '0', '0', '0']
+        initialize_ports()
 
     response = json.dumps({
         'status': 'ok',
         'temps': json.dumps(temps),
     })
 
-    return HttpResponse(response)
+    if len(temps) == 4:
+        try:
+            return HttpResponse(response)
+        except ValueError:
+            print('wrong data received')
 
 
 def set_temps(request):
@@ -97,7 +117,7 @@ def set_temps(request):
     temps = json.loads(request.POST['temps'])
 
     try:
-        heaters.write(bytes(f"{temps[0]},{temps[1]},{temps[2]},,{temps[3]}", 'utf-8'))
+        heaters.write(bytes(f"{temps[0]},{temps[1]},{temps[2]},{temps[3]},", 'utf-8'))
     except:
         print('Serial port not available')
 
@@ -106,3 +126,17 @@ def set_temps(request):
     })
 
     return HttpResponse(response)
+
+
+def production(request):
+
+    context = {}
+
+    return render(request, 'orbioUI/production.html', context)
+
+
+def pcr_run(request):
+
+    context = {}
+
+    return render(request, 'orbioUI/pcr_run.html', context)

@@ -1,0 +1,16 @@
+#heater-temps{
+    position: fixed;
+    bottom: 100px;
+    right: 100px;
+    font-size: 20;
+    cursor: pointer;
+}
+
+.heater-temp{
+    display: flex;
+    align-items: center;
+}
+
+.heater-title{
+    margin-right: 10px;
+}
