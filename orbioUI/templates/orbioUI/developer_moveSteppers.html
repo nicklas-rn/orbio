@@ -59,9 +59,10 @@
                 <p class="element-title">Disk Motor</p>
                 <p class="element-position">current pos: <span class="element-position-value" id="element-position-diskMotor">0</span></p>
                 <div class="element-inputs element-inputs-horizontal">
-                    <button class="element-button element-button-horizontal element-button-up" onclick="moveElement('diskMotor', '1')"><img class="arrow arrow-left" src="/media/orbioUI/icons/clockwise.svg"></button>
-                    <input class="quadratic-input element-steps" id="element-steps-diskMotor" type="number" placeholder="distance" min="1" value="1">
-                    <button class="element-button element-button-horizontal element-button-down" onclick="moveElement('diskMotor', '0')"><img class="arrow arrow-right" src="/media/orbioUI/icons/anti-clockwise.svg"></button>
+                    <button class="element-button element-button-horizontal element-button-up" onclick="moveElement('diskMotor', '0')"><img class="arrow arrow-left" src="/media/orbioUI/icons/clockwise.svg"></button>
+                    <input class="quadratic-input element-steps quadratic-input-one" id="element-steps-diskMotor" type="number" placeholder="distance" min="1" value="1">
+                    <input class="quadratic-input element-speed quadratic-input-two" id="element-speed-diskMotor" type="number" placeholder="speed" min="1" value="1">
+                    <button class="element-button element-button-horizontal element-button-down" onclick="moveElement('diskMotor', '1')"><img class="arrow arrow-right" src="/media/orbioUI/icons/anti-clockwise.svg"></button>
                 </div>
             </div>
         </div>
@@ -77,6 +78,11 @@
     function moveElement(element, dir){
         let str = 'element-steps-' + element
         let steps = document.getElementById(str).value
+        let speed = 1
+        str = 'element-speed-' + element
+        if (element == 'diskMotor'){
+            speed = document.getElementById(str).value
+        }
         str = 'element-position-' + element
         let currentPosElement = document.getElementById(str)
         let currentPos = parseInt(currentPosElement.innerHTML)
@@ -89,7 +95,9 @@
         }
         let new_pos = steps * transformedDir + currentPos
 
-        if(new_pos >= 0 && element != 'upperLayer' || new_pos <= 0 && element == 'upperLayer'){
+        console.log(element, dir, steps, speed)
+
+        if(new_pos >= 0 && element != 'upperLayer' || new_pos <= 0 && element == 'upperLayer' || element == 'diskMotor'){
 
             $.ajax({
                 type: 'POST',
@@ -98,6 +106,7 @@
                     'element': JSON.stringify(element),
                     'dir': JSON.stringify(dir),
                     'steps': JSON.stringify(steps),
+                    'speed': JSON.stringify(speed),
                     'csrfmiddlewaretoken': '{{csrf_token}}'
                 },
                 success: async function() {document.getElementById(str).textContent = new_pos; let delayres = await delay(50); console.log('data received');}

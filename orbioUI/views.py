@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import *
+from .utils import *
 import time, json, serial, re
 import serial.tools.list_ports
 from django.http import HttpResponse
@@ -67,10 +68,18 @@ def move_element(request):
     element = json.loads(request.POST['element'])
     dir = json.loads(request.POST['dir'])
     steps = json.loads(request.POST['steps'])
+    speed = json.loads(request.POST['speed'])
 
-    print(element, dir, steps)
+    print(element, dir, steps, speed)
 
-    steppers.write(bytes(f"{element},{dir},{steps},", 'utf-8'))
+    data_received = False
+
+    try:
+        steppers.write(bytes(f"{element},{dir},{steps},{speed},", 'utf-8'))
+        data_received = True
+    except serial.serialutil.PortNotOpenError:
+        print('Serial port not available (moving element)')
+        initialize_ports()
 
     response = json.dumps({
         'status': 'ok',
@@ -96,7 +105,7 @@ def read_temps(request):
         temps = re.sub('[^\d\.\,]', '', str(heaters.readline())).split(',')
         print(temps)
     except serial.serialutil.PortNotOpenError:
-        print('Serial port not available')
+        print('Serial port not available (reading temp)')
         temps = ['0', '0', '0', '0']
         initialize_ports()
 
@@ -140,3 +149,4 @@ def pcr_run(request):
     context = {}
 
     return render(request, 'orbioUI/pcr_run.html', context)
+

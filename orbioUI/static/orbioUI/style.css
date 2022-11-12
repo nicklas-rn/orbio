@@ -105,6 +105,14 @@ input{
     display: flex;
 }
 
+.quadratic-input-one, .quadratic-input-two{
+    width: 80px;
+}
+
+.quadratic-input-one{
+    margin-right: 10px;
+}
+
 
 .navigator{
     position: absolute;
