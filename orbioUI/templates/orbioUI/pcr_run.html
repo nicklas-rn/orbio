@@ -29,35 +29,17 @@
 {% include 'orbioUI/heater_temps.html' %}
 
 <script>
-    function startRun(element, dir){
-        let str = 'element-steps-' + element
-        let steps = document.getElementById(str).value
-        str = 'element-position-' + element
-        let currentPosElement = document.getElementById(str)
-        let currentPos = parseInt(currentPosElement.innerHTML)
-        let transformedDir = 0
-        if(dir == 1){
-            transformedDir = 1
-        }
-        else if(dir == 0){
-            transformedDir = -1
-        }
-        let new_pos = steps * transformedDir + currentPos
+    function startRun(){
 
-        if(new_pos >= 0 && element != 'upperLayer' || new_pos <= 0 && element == 'upperLayer'){
-
-            $.ajax({
-                type: 'POST',
-                url: '/move_element/',
-                data: {
-                    'element': JSON.stringify(element),
-                    'dir': JSON.stringify(dir),
-                    'steps': JSON.stringify(steps),
-                    'csrfmiddlewaretoken': '{{csrf_token}}'
-                },
-                success: async function() {document.getElementById(str).textContent = new_pos; let delayres = await delay(50); console.log('data received');}
-            })
-       }
+        let request = new XMLHttpRequest();
+        let method = 'GET';
+        let url = '/pcr_run_start/';
+        request.open(method, url);
+        request.onload = function () {
+            let myHTML = request.response;
+        document.getElementById('pcr-run').innerHTML = myHTML;
+        };
+        request.send();
     }
 </script>
 

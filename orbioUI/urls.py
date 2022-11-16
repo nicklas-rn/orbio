@@ -18,6 +18,7 @@ urlpatterns = [
 
     path('production/', views.production, name='production'),
     path('pcr_run/', views.pcr_run, name='pcr_run'),
+    path('pcr_run_start/', views.pcr_run_start, name='pcr_run_start'),
 ]
 
 

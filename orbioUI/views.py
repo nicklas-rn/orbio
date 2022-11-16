@@ -90,7 +90,11 @@ def move_element(request):
 
 def home_elements(request):
 
-    steppers.write(bytes(f"homeElements", 'utf-8'))
+    try:
+        steppers.write(bytes(f"homeElements", 'utf-8'))
+    except serial.serialutil.PortNotOpenError:
+        print('Serial port not available (moving element)')
+        initialize_ports()
 
     response = json.dumps({
         'status': 'ok',
@@ -146,7 +150,33 @@ def production(request):
 
 def pcr_run(request):
 
+    try:
+        steppers.write(bytes(f"homeElements", 'utf-8'))
+        steppers.write(bytes(f"lifter,1,90,1,", 'utf-8'))
+    except serial.serialutil.PortNotOpenError:
+        print('Serial port not available (moving element)')
+        initialize_ports()
+
     context = {}
 
     return render(request, 'orbioUI/pcr_run.html', context)
+
+
+def pcr_run_start(request):
+
+    try:
+        steppers.write(bytes(f"homeElements", 'utf-8'))
+        steppers.write(bytes(f"upperLayer,0,30,1,", 'utf-8'))
+        steppers.write(bytes(f"upperLayer,1,5,1,", 'utf-8'))
+        steppers.write(bytes(f"diskMotor,1,1000,4,", 'utf-8'))
+        steppers.write(bytes(f"upperLayer,1,5,1,", 'utf-8'))
+        steppers.write(bytes(f"lowerLayer,1,12,1,", 'utf-8'))
+        steppers.write(bytes(f"homeElements", 'utf-8'))
+        steppers.write(bytes(f"lifter,1,90,1,", 'utf-8'))
+
+    except serial.serialutil.PortNotOpenError:
+        print('Serial port not available (moving element)')
+        initialize_ports()
+
+    return render(request, 'orbioUI/pcr_run_start.html')
 
