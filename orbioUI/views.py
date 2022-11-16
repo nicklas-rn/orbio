@@ -19,13 +19,13 @@ def initialize_ports():
     global heaters
 
     try:
-        steppers = serial.Serial(port='/dev/cu.usbserial-120', baudrate=115200, timeout=.1)
+        steppers = serial.Serial(port='/dev/ttyUSB1', baudrate=115200, timeout=.1)
     except:
         steppers = serial.Serial()
 
 
     try:
-        heaters = serial.Serial(port='/dev/cu.usbserial-110', baudrate=19200, timeout=.1)
+        heaters = serial.Serial(port='/dev/ttyUSB0', baudrate=19200, timeout=.1)
     except:
         heaters = serial.Serial()
 

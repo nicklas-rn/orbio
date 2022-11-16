@@ -25,23 +25,37 @@
     <button class="text-button" onclick="startRun()">Disk inserted</button>
 </div>
 
+<div id="pcr-run-started">
+    {% include 'orbioUI/pcr_run_start.html' %}
+</div>
+
 
 {% include 'orbioUI/heater_temps.html' %}
 
 <script>
     function startRun(){
 
-        let request = new XMLHttpRequest();
-        let method = 'GET';
-        let url = '/pcr_run_start/';
-        request.open(method, url);
-        request.onload = function () {
-            let myHTML = request.response;
-        document.getElementById('pcr-run').innerHTML = myHTML;
-        };
-        request.send();
+        $.ajax({
+            type: 'POST',
+            url: '/pcr_run_start/',
+            data: {
+                'csrfmiddlewaretoken': '{{csrf_token}}'
+            },
+            success: async function() {
+                let delayres = await delay(50);
+                console.log('data received');
+                document.getElementById('pcr-run').style.display = 'None';
+                document.getElementById('pcr-run-started').style.display = 'block';
+                }
+        })
     }
 </script>
+
+<style>
+    #pcr-run-started{
+        display: None;
+    }
+</style>
 
 {% endblock %}
 
